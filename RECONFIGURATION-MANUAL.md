@@ -1,95 +1,142 @@
 # Manual de Reconfiguração Autorizada
 
-Este manual descreve como reconstruir o ambiente de skills em um computador
-novo. Ele foi desenhado para que um agente possa executar o processo somente
-depois de receber autorização explícita do proprietário.
+Este manual explica como reconstruir o ambiente de skills em um computador
+novo. O processo foi preparado para ser executado com um único comando, mas
+sempre exige autorização explícita.
 
-## Princípio de segurança
+## Regra de segurança
 
-Nenhuma reconfiguração deve ser executada apenas porque este repositório foi
-clonado. O agente deve:
+O agente não deve reconfigurar o computador apenas porque encontrou este
+repositório. Antes de executar o instalador, ele deve:
 
-1. explicar o que pretende alterar;
+1. explicar as etapas que serão executadas;
 2. pedir autorização explícita;
-3. executar somente os passos autorizados;
-4. informar o resultado e qualquer etapa que ainda precise de ação manual.
+3. executar somente o escopo autorizado;
+4. informar o resultado de cada etapa.
 
-Uma autorização válida deve mencionar claramente a reconfiguração, por
-exemplo: **"Autorizo reconfigurar este computador usando o manual"**.
-
-## Preparação de um computador novo
-
-Instale ou disponibilize:
-
-- Git;
-- PowerShell;
-- Node.js, quando alguma skill ou plugin exigir;
-- GitHub Copilot CLI, se ele for o agente principal.
-
-Autentique-se novamente no GitHub. Tokens, sessões e credenciais não fazem
-parte deste repositório e nunca devem ser gravados nele.
-
-## Configuração completa em um comando
-
-Depois de revisar este manual, execute:
+O comando principal é:
 
 ```powershell
 .\setup.ps1 -Authorize
 ```
 
-Esse comando restaura as skills, instala a política de seleção e tenta
-reinstalar Superpowers, Impeccable e Claude-Mem. Cada etapa é reportada
-individualmente; uma falha não fica silenciosa.
+O script pedirá uma confirmação textual adicional. Digite:
 
-Opções:
+```text
+I AUTHORIZE RECONFIGURATION
+```
+
+Sem essa confirmação, nada será alterado.
+
+## Passo a passo completo
+
+### 1. Preparar o computador
+
+Instale:
+
+- Git;
+- PowerShell;
+- Node.js 20 ou superior;
+- GitHub Copilot CLI.
+
+Abra um novo PowerShell depois das instalações para atualizar o `PATH`.
+
+### 2. Autenticar
+
+Faça login no GitHub e nos serviços que serão usados. Tokens, sessões, bancos,
+logs e credenciais não são armazenados no catálogo.
+
+### 3. Clonar ou atualizar
+
+Para uma instalação nova:
+
+```powershell
+cd $HOME
+git clone https://github.com/gcapodeferro02/my-agent-skills.git
+cd my-agent-skills
+```
+
+Para atualizar uma cópia existente:
+
+```powershell
+cd "$HOME\my-agent-skills"
+git pull
+```
+
+### 4. Conferir antes de alterar
+
+```powershell
+.\setup.ps1 -Authorize -WhatIf
+```
+
+Esse modo apenas lista as etapas e não instala nada.
+
+### 5. Executar a configuração completa
+
+```powershell
+.\setup.ps1 -Authorize
+```
+
+O instalador restaura as skills, configura a política de seleção e tenta
+reinstalar o Superpowers, o Impeccable e o Claude-Mem.
+
+### 6. Reiniciar e verificar
+
+Reinicie o Copilot CLI e confirme:
+
+```powershell
+Get-ChildItem "$HOME\.github\skills" -Recurse -Filter SKILL.md
+copilot plugin list
+Invoke-WebRequest http://127.0.0.1:37777 -UseBasicParsing
+```
+
+## O que é restaurado
+
+- Skills independentes em `~\.github\skills` e `~\.claude\skills`;
+- snapshots das skills dos plugins presentes no catálogo;
+- política de seleção no arquivo de instruções do Copilot, se ainda não existir;
+- plugins e runtimes suportados pelo `setup.ps1`.
+
+## O que não é restaurado automaticamente
+
+- tokens, senhas e sessões;
+- bancos de dados, logs e caches;
+- credenciais do GitHub ou de outros provedores;
+- dados históricos do Claude-Mem;
+- configurações específicas de outros sistemas operacionais;
+- scripts arbitrários encontrados dentro das skills.
+
+## Pular partes da instalação
+
+Se algum componente já estiver configurado:
 
 ```powershell
 .\setup.ps1 -Authorize -SkipPlugins
 .\setup.ps1 -Authorize -SkipClaudeMem
 ```
 
-## Restaurar somente o catálogo
+É possível combinar as opções:
 
 ```powershell
-git clone https://github.com/gcapodeferro02/my-agent-skills.git
-cd my-agent-skills
-.\restore.ps1 -Authorize
+.\setup.ps1 -Authorize -SkipPlugins -SkipClaudeMem
 ```
 
-O script pede uma confirmação textual adicional antes de copiar qualquer
-arquivo. Sem `-Authorize`, ele apenas mostra que a autorização é obrigatória e
-não altera o computador.
-
-## O que o script restaura
-
-- Skills independentes para `~\.github\skills` e `~\.claude\skills`;
-- snapshots de skills de plugins no catálogo;
-- a política de seleção de skills, quando o arquivo de instruções local ainda
-  não existir.
-
-O script não:
-
-- instala plugins;
-- inicia workers;
-- cria ou altera tokens;
-- copia MCPs, bancos, logs ou caches;
-- altera arquivos existentes sem autorização adicional por arquivo;
-- executa comandos arbitrários encontrados dentro das skills.
-
-## Integrações que exigem reativação manual
+## Instalação manual de integrações
 
 ### Superpowers
-
-Reinstale pelo marketplace do Copilot:
 
 ```powershell
 copilot plugin marketplace add obra/superpowers-marketplace
 copilot plugin install superpowers@superpowers-marketplace
 ```
 
-### Claude-Mem
+### Impeccable
 
-Instale o pacote e configure a integração para o Copilot CLI:
+```powershell
+npx.cmd impeccable@latest install --providers=github --scope=global --yes
+```
+
+### Claude-Mem
 
 ```powershell
 npx.cmd claude-mem@latest install --provider claude --ide copilot-cli
@@ -99,32 +146,22 @@ npx.cmd claude-mem start
 Revise o MCP gerado e reinicie o Copilot CLI. O login e a seleção de provedor
 devem ser feitos novamente no computador novo.
 
-### Impeccable
+## Problemas comuns
 
-Se precisar atualizar a instalação gerenciada, execute:
+### Dependência ausente
 
-```powershell
-npx.cmd impeccable@latest install --providers=github --scope=global --yes
-```
+Se o instalador indicar que Git, Node.js, `npx` ou Copilot CLI não foi
+encontrado, instale o componente indicado, abra um novo PowerShell e execute o
+comando novamente.
 
-## Verificação pós-reconfiguração
-
-Confirme:
+### Claude-Mem sem resposta
 
 ```powershell
-Test-Path "$HOME\.github\skills"
-Test-Path "$HOME\.claude\skills"
-Get-ChildItem "$HOME\.github\skills" -Recurse -Filter SKILL.md
+npx.cmd claude-mem start
+Invoke-WebRequest http://127.0.0.1:37777 -UseBasicParsing
 ```
 
-Depois reinicie o agente e confirme que ele consulta o catálogo antes de
-iniciar uma solicitação.
+### Repositório privado sem acesso
 
-## Atualização do catálogo
-
-Quando skills forem adicionadas, removidas ou atualizadas:
-
-1. atualize o bundle local;
-2. revise `skills-manifest.json`;
-3. verifique se não há credenciais ou dados de runtime;
-4. faça commit e push para o repositório privado.
+Autentique-se no GitHub com uma conta que tenha acesso a
+`gcapodeferro02/my-agent-skills` e repita o `git clone` ou `git pull`.

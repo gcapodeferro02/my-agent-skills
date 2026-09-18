@@ -15,6 +15,12 @@ if (!$Authorize) {
     exit 1
 }
 
+$phrase = Read-Host 'Digite exatamente: I AUTHORIZE RECONFIGURATION'
+if ($phrase -cne 'I AUTHORIZE RECONFIGURATION') {
+    Write-Output 'Autorização não confirmada. Nada foi alterado.'
+    exit 1
+}
+
 if ($WhatIfPreference) {
     Write-Output 'WhatIf: would restore skills, install the skill-selection policy,'
     if (!$SkipPlugins) {
@@ -43,7 +49,7 @@ function Invoke-SetupStep {
 }
 
 Invoke-SetupStep 'Restore cataloged skills' {
-    & (Join-Path $root 'restore.ps1') -Authorize
+    & (Join-Path $root 'restore.ps1') -InternalAuthorized
 }
 
 Invoke-SetupStep 'Install skill-selection policy' {

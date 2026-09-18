@@ -1,20 +1,23 @@
 [CmdletBinding()]
 param(
-    [switch]$Authorize
+    [switch]$Authorize,
+    [switch]$InternalAuthorized
 )
 
 $ErrorActionPreference = 'Stop'
 
-if (!$Authorize) {
+if (!$Authorize -and !$InternalAuthorized) {
     Write-Output 'Authorization required. Nothing was changed.'
     Write-Output 'Run .\configure.ps1 -Authorize after reviewing the manual.'
     exit 1
 }
 
-$phrase = Read-Host 'Type exactly: I AUTHORIZE SKILL RESTORE'
-if ($phrase -cne 'I AUTHORIZE SKILL RESTORE') {
-    Write-Output 'Authorization not confirmed. Nothing was changed.'
-    exit 1
+if (!$InternalAuthorized) {
+    $phrase = Read-Host 'Digite exatamente: I AUTHORIZE SKILL RESTORE'
+    if ($phrase -cne 'I AUTHORIZE SKILL RESTORE') {
+        Write-Output 'Autorização não confirmada. Nada foi alterado.'
+        exit 1
+    }
 }
 
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
