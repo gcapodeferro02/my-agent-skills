@@ -8,6 +8,7 @@ Portable backup of the skills available on this machine.
 - `skills-manifest.json` records the source category and SHA-256 for each `SKILL.md`.
 - `SKILL-SELECTION-POLICY.md` defines the required skill-selection workflow.
 - `RECONFIGURATION-MANUAL.md` documents the authorized recovery workflow.
+- `setup.ps1` restores skills and reinstalls supported integrations in one command.
 - `configure.ps1` runs the guarded recovery workflow on Windows.
 - `restore.ps1` restores the bundle to the standard user-level skill locations on Windows.
 
@@ -26,3 +27,14 @@ From the repository root in PowerShell:
 The script asks for a second confirmation before making changes. Restart the relevant agent after restoring. Skills from managed plugins may
 also require reinstalling the original plugin so its commands and hooks are
 registered.
+
+For the complete setup, including Superpowers, Impeccable, Claude-Mem and the
+skill-selection policy:
+
+```powershell
+.\setup.ps1 -Authorize
+```
+
+Use `-SkipPlugins` or `-SkipClaudeMem` when an integration should not be
+changed. Use `-WhatIf` to preview the invocation; no setup action is performed
+unless `-Authorize` is also supplied.

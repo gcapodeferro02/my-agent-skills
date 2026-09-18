@@ -29,7 +29,26 @@ Instale ou disponibilize:
 Autentique-se novamente no GitHub. Tokens, sessões e credenciais não fazem
 parte deste repositório e nunca devem ser gravados nele.
 
-## Restaurar o catálogo
+## Configuração completa em um comando
+
+Depois de revisar este manual, execute:
+
+```powershell
+.\setup.ps1 -Authorize
+```
+
+Esse comando restaura as skills, instala a política de seleção e tenta
+reinstalar Superpowers, Impeccable e Claude-Mem. Cada etapa é reportada
+individualmente; uma falha não fica silenciosa.
+
+Opções:
+
+```powershell
+.\setup.ps1 -Authorize -SkipPlugins
+.\setup.ps1 -Authorize -SkipClaudeMem
+```
+
+## Restaurar somente o catálogo
 
 ```powershell
 git clone https://github.com/gcapodeferro02/my-agent-skills.git
@@ -109,4 +128,3 @@ Quando skills forem adicionadas, removidas ou atualizadas:
 2. revise `skills-manifest.json`;
 3. verifique se não há credenciais ou dados de runtime;
 4. faça commit e push para o repositório privado.
-
