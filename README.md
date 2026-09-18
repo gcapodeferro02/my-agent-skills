@@ -6,6 +6,7 @@ Portable backup of the skills available on this machine.
 
 - `skills/` contains each skill and its auxiliary files.
 - `skills-manifest.json` records the source category and SHA-256 for each `SKILL.md`.
+- `SKILL-SELECTION-POLICY.md` defines the required skill-selection workflow.
 - `restore.ps1` restores the bundle to the standard user-level skill locations on Windows.
 
 Managed plugin skills are stored as snapshots. Update this repository when the
