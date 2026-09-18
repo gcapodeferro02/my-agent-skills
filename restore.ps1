@@ -1,4 +1,21 @@
+[CmdletBinding()]
+param(
+    [switch]$Authorize
+)
+
 $ErrorActionPreference = 'Stop'
+
+if (!$Authorize) {
+    Write-Output 'Authorization required. Nothing was changed.'
+    Write-Output 'Run .\configure.ps1 -Authorize after reviewing the manual.'
+    exit 1
+}
+
+$phrase = Read-Host 'Type exactly: I AUTHORIZE SKILL RESTORE'
+if ($phrase -cne 'I AUTHORIZE SKILL RESTORE') {
+    Write-Output 'Authorization not confirmed. Nothing was changed.'
+    exit 1
+}
 
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $skillsRoot = Join-Path $root 'skills'
