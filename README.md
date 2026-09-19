@@ -1,168 +1,124 @@
-# Meu Catálogo de Skills
+# my-agent-skills
 
-Repositório privado com uma cópia portátil das skills e das configurações
-necessárias para reconstruir meu ambiente de IA em outro computador.
+This repository is a portable catalog of agent skills and installation helpers for local setup and restore workflows.
 
-**Repositório:** <https://github.com/gcapodeferro02/my-agent-skills>
+It is designed to help users install and manage skills in a reproducible way, while keeping a conservative policy around provenance, licensing, and redistribution rights for third-party materials.
 
-## O que está incluído
+## What this project does
 
-- `skills/` — skills e arquivos auxiliares catalogados.
-- `skills-manifest.json` — origem, caminho e hash SHA-256 de cada `SKILL.md`.
-- `SKILL-SELECTION-POLICY.md` — regra para escolher a melhor skill antes de
-  iniciar cada solicitação.
-- `RECONFIGURATION-MANUAL.md` — manual completo de configuração.
-- `setup.ps1` — instalação completa em um comando.
-- `configure.ps1` — restauração protegida do catálogo.
-- `restore.ps1` — cópia das skills para os diretórios locais.
+- catalogs skills and helper assets;
+- records source, path, and SHA-256 provenance in `skills-manifest.json`;
+- keeps a local restore path for approved skill content;
+- verifies the manifest and integrity of packaged skill copies;
+- blocks unsafe public redistribution by default until human review confirms the rights.
 
-Caches, logs, bancos de dados, tokens, sessões e credenciais são excluídos
-intencionalmente.
+## Intended audience
 
-## Configuração em um computador novo
+This project is intended for users and operators who want to:
 
-### 1. Instale os pré-requisitos
+- restore a local skill catalog on a new machine;
+- keep a reproducible skill environment;
+- review provenance and licensing before public publication;
+- manage local-only installs without assuming external content is freely redistributable.
 
-No computador novo, instale:
+## Supported platforms
 
-- Git;
-- PowerShell;
-- Node.js (inclui `npm` e `npx`);
-- GitHub Copilot CLI, se ele for o agente que você pretende usar.
+### Windows
+Supported.
 
-Depois, autentique-se novamente no GitHub. O token nunca é armazenado neste
-repositório.
+### macOS
+Not currently supported / experimental.
 
-### 2. Baixe o catálogo
+### Linux
+Not currently supported / experimental.
 
-Abra o PowerShell e execute:
+## Repository structure
 
-```powershell
-cd $HOME
-git clone https://github.com/gcapodeferro02/my-agent-skills.git
-cd my-agent-skills
-```
+- `skills/` — bundled skill snapshots and related files;
+- `skills-manifest.json` — per-skill provenance, source, hash, and redistribution metadata;
+- `SKILL-SELECTION-POLICY.md` — the selection rules for skill usage;
+- `setup.ps1` — restore and install entry point;
+- `restore.ps1` — local restore workflow;
+- `catalog/` — human-readable skill inventory and status table;
+- `docs/` — architecture and installation guidance;
+- `scripts/` — verification and health scripts.
 
-Se o repositório já existir localmente e você quiser atualizá-lo:
+## Third-party content
 
-```powershell
-cd "$HOME\my-agent-skills"
-git pull
-```
+This repository may reference or redistribute skills created by third parties.
 
-### 3. Faça a configuração completa
+Third-party content is NOT automatically covered by this repository's license.
 
-Revise o que será feito e execute:
+Each third-party component remains subject to its original license and terms.
 
-```powershell
-.\setup.ps1 -Authorize
-```
+See `THIRD-PARTY-NOTICES.md` and `skills-manifest.json`.
 
-Quando solicitado, digite exatamente:
+## Current audit posture
 
-```text
-I AUTHORIZE RECONFIGURATION
-```
+The manifest currently contains:
 
-O instalador irá:
+- 52 entries with verified upstream source and Apache-2.0 evidence, recorded as
+  `allowed_with_conditions`;
+- 1 local snapshot still marked `review_required` / `unknown`.
 
-1. restaurar as skills;
-2. configurar a política de seleção automática;
-3. instalar o Superpowers;
-4. instalar o Impeccable;
-5. instalar e iniciar o Claude-Mem;
-6. mostrar um resumo de sucesso e falha.
+The 52 conditional entries remain blocked by default because redistribution
+requires preserving the Apache license, copyright notices, and any
+plugin-specific or dependency notices. The local snapshot has no reproducible
+license evidence and must not be published as project-owned content.
 
-Ao terminar, reinicie o Copilot CLI.
+See `third-party-notices/` for the preserved Apache license and notices.
 
-### 4. Verifique a instalação
+## Installation
+
+1. Review this README and the licensing notices.
+2. Run the verification script before install or publication:
 
 ```powershell
-Test-Path "$HOME\.github\skills"
-Test-Path "$HOME\.claude\skills"
-Get-ChildItem "$HOME\.github\skills" -Recurse -Filter SKILL.md
-copilot plugin list
+.\scripts\verify.ps1
 ```
 
-Também confirme que o worker do Claude-Mem responde:
-
-```powershell
-Invoke-WebRequest http://127.0.0.1:37777 -UseBasicParsing
-```
-
-### 5. Faça login nos serviços novamente
-
-Em um computador novo, será necessário autenticar novamente os serviços que
-exigem conta. O catálogo não transporta credenciais por segurança.
-
-## Opções
-
-Simular as etapas sem alterar o computador:
+3. Use explicit authorization for local restore only:
 
 ```powershell
 .\setup.ps1 -Authorize -WhatIf
-```
-
-Restaurar somente os arquivos das skills:
-
-```powershell
-.\restore.ps1 -Authorize
-```
-
-Pular a instalação de plugins:
-
-```powershell
-.\setup.ps1 -Authorize -SkipPlugins
-```
-
-Pular o Claude-Mem:
-
-```powershell
-.\setup.ps1 -Authorize -SkipClaudeMem
-```
-
-## Solução de problemas
-
-### `git` não encontrado
-
-Instale o Git e abra um novo PowerShell.
-
-### `npx` ou Node.js não encontrado
-
-Instale o Node.js e abra um novo PowerShell.
-
-### Copilot CLI não encontrado
-
-Instale o GitHub Copilot CLI e execute novamente com:
-
-```powershell
 .\setup.ps1 -Authorize
 ```
 
-### O Claude-Mem não iniciou
+Conditional or unverified entries are intentionally skipped unless
+`-AllowLocalReference` is explicitly requested. That switch enables local
+reference use only; it does not grant permission to redistribute the content.
 
-Execute manualmente:
+## Verification and update
 
-```powershell
-npx.cmd claude-mem start
-```
-
-Depois reinicie o Copilot CLI.
-
-## Atualizar o catálogo
-
-Quando uma skill for adicionada ou atualizada:
-
-1. atualize os arquivos locais;
-2. revise `skills-manifest.json`;
-3. confirme que não há segredos ou dados de runtime;
-4. faça commit e push:
+The repository includes safety checks for manifest integrity, file presence, and provenance status:
 
 ```powershell
-git add .
-git commit -m "Atualiza catálogo de skills"
-git push
+.\scripts\list.ps1
+.\scripts\doctor.ps1
+.\scripts\verify.ps1
+.\scripts\update.ps1
 ```
 
-Para o manual detalhado e as regras de autorização, consulte
-`RECONFIGURATION-MANUAL.md`.
+## Contribution
+
+Please do not contribute or publish content whose origin, license, or redistribution rights are unclear. If a skill or asset has not been explicitly reviewed, keep it out of public redistribution.
+
+## Licensing
+
+Original content in this repository is covered by `LICENSE` unless another file or notice states otherwise.
+
+Third-party content remains subject to its original license and notice requirements.
+
+## Security
+
+This repository follows a conservative security posture for scripts, plugins, and external content. See `SECURITY.md`.
+
+## Limitations
+
+- some bundled skills may be local-only references, not public redistributable copies;
+- not every third-party skill in the catalog has a confirmed redistribution license;
+- installation and restore features do not override source license conditions.
+
+## Support
+
+This repository is maintained as a catalog and safety-first setup helper. Support is limited to provenance, restore, and installation health checks, not legal clearance for redistribution.

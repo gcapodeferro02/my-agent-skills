@@ -2,6 +2,10 @@
 
 This catalog records the current posture of bundled skills from a licensing and provenance standpoint.
 
+Current count: 52 entries are `VERIFIED` with `allowed_with_conditions`
+redistribution, and 1 local snapshot is `REVIEW_REQUIRED` with `unknown`
+redistribution. Conditional entries remain blocked by default.
+
 | Skill | Category | Origin | License | Redistribution | Status |
 |---|---|---|---|---|---|
 | `skills/*` | Third-party snapshots | Claude marketplace / external sources | Unverified / review required | `unknown` / `not_allowed` until verified | `REVIEW_REQUIRED` |

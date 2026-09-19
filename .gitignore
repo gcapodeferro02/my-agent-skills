@@ -1,0 +1,23 @@
+.env
+.env.*
+!.env.example
+
+*.log
+*.db
+*.sqlite
+*.sqlite3
+*.pem
+*.key
+*.p12
+*.pfx
+
+credentials/
+secrets/
+sessions/
+tokens/
+cache/
+logs/
+
+# Local runtime artifacts
+.DS_Store
+Thumbs.db
