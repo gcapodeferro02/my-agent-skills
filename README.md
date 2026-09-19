@@ -101,7 +101,26 @@ The repository includes safety checks for manifest integrity, file presence, and
 
 ## Contribution
 
-Please do not contribute or publish content whose origin, license, or redistribution rights are unclear. If a skill or asset has not been explicitly reviewed, keep it out of public redistribution.
+Please do not contribute or publish content whose origin, license, or
+redistribution rights are unclear. If a skill or asset has not been explicitly
+reviewed, keep it out of public redistribution.
+
+Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before opening a pull request. Every
+new bundled skill requires provenance, license, attribution, redistribution,
+and integrity metadata in `skills-manifest.json`.
+
+The current governance sequence is:
+
+1. complete the audit and present the report for human approval;
+2. apply any approved removals or metadata changes;
+3. run `.\scripts\verify.ps1`;
+4. review the diff and changelog;
+5. commit and open the final pull request only after approval.
+
+No automated restore, commit, publication, or pull request overrides these
+gates.
+
+See [`CHANGELOG.md`](CHANGELOG.md) for dated repository changes.
 
 ## Licensing
 
