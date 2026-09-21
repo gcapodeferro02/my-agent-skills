@@ -1,143 +1,140 @@
 # my-agent-skills
 
-This repository is a portable catalog of agent skills and installation helpers for local setup and restore workflows.
+Este repositório é um catálogo portátil de skills de agente e assistentes de instalação para fluxos de trabalho de configuração e restauração local.
 
-It is designed to help users install and manage skills in a reproducible way, while keeping a conservative policy around provenance, licensing, and redistribution rights for third-party materials.
+Ele foi projetado para ajudar usuários a instalar e gerenciar skills de forma reproduzível, mantendo uma política conservadora em relação à procedência, licenciamento e direitos de redistribuição de materiais de terceiros.
 
-## What this project does
+## O que este projeto faz
 
-- catalogs skills and helper assets;
-- records source, path, and SHA-256 provenance in `skills-manifest.json`;
-- keeps a local restore path for approved skill content;
-- verifies the manifest and integrity of packaged skill copies;
-- blocks unsafe public redistribution by default until human review confirms the rights.
+- Cataloga skills e recursos de apoio;
+- Registra a origem, caminho e procedência (SHA-256) no arquivo `skills-manifest.json`;
+- Mantém um caminho de restauração local para o conteúdo de skills aprovadas;
+- Verifica o manifesto e a integridade das cópias de skills empacotadas;
+- Bloqueia por padrão a redistribuição pública insegura até que uma revisão humana confirme os direitos.
 
-## Intended audience
+## Público-alvo
 
-This project is intended for users and operators who want to:
+Este projeto destina-se a usuários e operadores que desejam:
 
-- restore a local skill catalog on a new machine;
-- keep a reproducible skill environment;
-- review provenance and licensing before public publication;
-- manage local-only installs without assuming external content is freely redistributable.
+- Restaurar um catálogo de skills local em uma nova máquina;
+- Manter um ambiente de skills reproduzível;
+- Revisar a procedência e o licenciamento antes da publicação;
+- Gerenciar instalações locais sem assumir que o conteúdo externo é livremente redistribuível.
 
-## Supported platforms
+## Plataformas suportadas
 
 ### Windows
-Supported.
+Suportado.
 
 ### macOS
-Not currently supported / experimental.
+Não suportado atualmente / experimental.
 
 ### Linux
-Not currently supported / experimental.
+Não suportado atualmente / experimental.
 
-## Repository structure
+## Estrutura do repositório
 
-- `skills/` — bundled skill snapshots and related files;
-- `skills-manifest.json` — per-skill provenance, source, hash, and redistribution metadata;
-- `SKILL-SELECTION-POLICY.md` — the selection rules for skill usage;
-- `setup.ps1` — restore and install entry point;
-- `restore.ps1` — local restore workflow;
-- `catalog/` — human-readable skill inventory and status table;
-- `docs/` — architecture and installation guidance;
-- `scripts/` — verification and health scripts.
+- `skills/` — Snapshots de skills e arquivos relacionados;
+- `skills-manifest.json` — Metadados de procedência, origem, hash e redistribuição por skill;
+- `legal-and-docs/` - Documentação legal, de conformidade e auxiliar.
+- `setup.ps1` — Ponto de entrada para restauração e instalação;
+- `restore.ps1` — Fluxo de trabalho de restauração local;
 
-## Third-party content
+## Conteúdo de terceiros
 
-This repository may reference or redistribute skills created by third parties.
+Este repositório pode referenciar ou redistribuir skills criadas por terceiros.
 
-Third-party content is NOT automatically covered by this repository's license.
+O conteúdo de terceiros NÃO é automaticamente coberto pela licença deste repositório.
 
-Each third-party component remains subject to its original license and terms.
+Cada componente de terceiro permanece sujeito à sua licença e termos originais.
 
-See `THIRD-PARTY-NOTICES.md` and `skills-manifest.json`.
+Consulte `legal-and-docs/THIRD-PARTY-NOTICES.md` e `skills-manifest.json`.
 
-## Current audit posture
+## Postura de auditoria atual
 
-The manifest currently contains:
+O manifesto contém atualmente:
 
-- 52 entries with verified upstream source and Apache-2.0 evidence, recorded as
+- 52 entradas com origem upstream verificada e evidência Apache-2.0, registradas como
   `allowed_with_conditions`;
-- 1 local snapshot still marked `review_required` / `unknown`.
+- 1 snapshot local ainda marcado como `review_required` / `unknown`.
 
-The 52 conditional entries remain blocked by default because redistribution
-requires preserving the Apache license, copyright notices, and any
-plugin-specific or dependency notices. The local snapshot has no reproducible
-license evidence and must not be published as project-owned content.
+As 52 entradas condicionais permanecem bloqueadas por padrão porque a redistribuição
+exige a preservação da licença Apache, avisos de direitos autorais e quaisquer
+avisos específicos do plugin ou de dependência. O snapshot local não tem evidência
+de licença reproduzível e não deve ser publicado como conteúdo próprio do projeto.
 
-See `third-party-notices/` for the preserved Apache license and notices.
+Consulte `legal-and-docs/third-party-notices/` para a licença Apache e os avisos preservados.
 
-## Installation
+## Instalação
 
-1. Review this README and the licensing notices.
-2. Run the verification script before install or publication:
+1. Revise este README e os avisos de licenciamento.
+2. Rode o script de verificação antes de instalar ou publicar:
 
 ```powershell
-.\scripts\verify.ps1
+.\legal-and-docs\scripts\verify.ps1
 ```
 
-3. Use explicit authorization for local restore only:
+3. Use autorização explícita apenas para restauração local:
 
 ```powershell
 .\setup.ps1 -Authorize -WhatIf
 .\setup.ps1 -Authorize
 ```
 
-Conditional or unverified entries are intentionally skipped unless
-`-AllowLocalReference` is explicitly requested. That switch enables local
-reference use only; it does not grant permission to redistribute the content.
+Entradas condicionais ou não verificadas são intencionalmente puladas, a menos que
+`-AllowLocalReference` seja explicitamente solicitado. Essa opção permite o uso
+de referência local apenas; ela não concede permissão para redistribuir o conteúdo.
 
-## Verification and update
+## Verificação e atualização
 
-The repository includes safety checks for manifest integrity, file presence, and provenance status:
+O repositório inclui verificações de segurança para a integridade do manifesto, presença de arquivos e status de procedência:
 
 ```powershell
-.\scripts\list.ps1
-.\scripts\doctor.ps1
-.\scripts\verify.ps1
-.\scripts\update.ps1
+.\legal-and-docs\scripts\list.ps1
+.\legal-and-docs\scripts\doctor.ps1
+.\legal-and-docs\scripts\verify.ps1
+.\legal-and-docs\scripts\update.ps1
 ```
 
-## Contribution
+## Contribuição
 
-Please do not contribute or publish content whose origin, license, or
-redistribution rights are unclear. If a skill or asset has not been explicitly
-reviewed, keep it out of public redistribution.
+Por favor, não contribua ou publique conteúdo cuja origem, licença ou
+direitos de redistribuição não sejam claros. Se uma skill ou recurso não foi
+explicitamente revisado, mantenha-o fora da redistribuição pública.
 
-Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before opening a pull request. Every
-new bundled skill requires provenance, license, attribution, redistribution,
-and integrity metadata in `skills-manifest.json`.
+Leia [`legal-and-docs/CONTRIBUTING.md`](CONTRIBUTING.md) antes de abrir um pull request. Cada
+nova skill empacotada requer metadados de procedência, licença, atribuição,
+redistribuição e integridade no `skills-manifest.json`.
 
-The current governance sequence is:
+A sequência de governança atual é:
 
-1. complete the audit and present the report for human approval;
-2. apply any approved removals or metadata changes;
-3. run `.\scripts\verify.ps1`;
-4. review the diff and changelog;
-5. commit and open the final pull request only after approval.
+1. Concluir a auditoria e apresentar o relatório para aprovação humana;
+2. Aplicar quaisquer remoções ou alterações de metadados aprovadas;
+3. Executar `.\legal-and-docs\scripts\verify.ps1`;
+4. Revisar o diff e o changelog;
+5. Fazer o commit e abrir o pull request final somente após a aprovação.
 
-No automated restore, commit, publication, or pull request overrides these
-gates.
+Nenhuma restauração, commit, publicação ou pull request automatizado sobrepõe essas
+barreiras.
 
-See [`CHANGELOG.md`](CHANGELOG.md) for dated repository changes.
+Consulte [`legal-and-docs/CHANGELOG.md`](CHANGELOG.md) para o histórico de alterações do repositório.
 
-## Licensing
+## Licenciamento
 
-Original content in this repository is covered by `LICENSE` unless another file or notice states otherwise.
+O conteúdo original deste repositório é coberto pela `LICENSE` em `legal-and-docs/`, a menos que outro arquivo ou aviso indique o contrário.
 
-Third-party content remains subject to its original license and notice requirements.
+O conteúdo de terceiros permanece sujeito à sua licença original e requisitos de aviso.
 
-## Security
+## Segurança
 
-This repository follows a conservative security posture for scripts, plugins, and external content. See `SECURITY.md`.
+Este repositório segue uma postura de segurança conservadora para scripts, plugins e conteúdo externo. Consulte `legal-and-docs/SECURITY.md`.
 
-## Limitations
+## Limitações
 
-- some bundled skills may be local-only references, not public redistributable copies;
-- not every third-party skill in the catalog has a confirmed redistribution license;
-- installation and restore features do not override source license conditions.
+- Algumas skills empacotadas podem ser apenas referências locais, não cópias redistribuíveis publicamente;
+- Nem toda skill de terceiro no catálogo tem uma licença de redistribuição confirmada;
+- As funcionalidades de instalação e restauração não anulam as condições da licença de origem.
 
-## Support
+## Suporte
 
-This repository is maintained as a catalog and safety-first setup helper. Support is limited to provenance, restore, and installation health checks, not legal clearance for redistribution.
+Este repositório é mantido como um catálogo e assistente de configuração com foco em segurança. O suporte é limitado a verificações de procedência, restauração e saúde da instalação, não à liberação legal para redistribuição.
