@@ -21,3 +21,12 @@ logs/
 # Local runtime artifacts
 .DS_Store
 Thumbs.db
+
+# Ignorar uma pasta específica
+.github/hooks/
+
+# Ignorar um arquivo específico
+impeccable.json
+
+# Ignorar todos os arquivos de uma extensão
+*.log
