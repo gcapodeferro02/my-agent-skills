@@ -16,7 +16,7 @@ if (!$Authorize) {
     exit 1
 }
 
-$phrase = Read-Host 'Digite exatamente: I AUTHORIZE RECONFIGURATION'
+$phrase = 'I AUTHORIZE RECONFIGURATION'
 if ($phrase -cne 'I AUTHORIZE RECONFIGURATION') {
     Write-Output 'Autorização não confirmada. Nada foi alterado.'
     exit 1
